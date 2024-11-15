@@ -2,11 +2,11 @@ POST http://localhost:3001/user/start
 Content-Type: application/json
 
 {
-  "chatId": "12345566827898",
+  "chatId": "123455636827898",
   "firstName": "John",
   "lastName": "Doe",
   "username": "johndoe",
-  "userId": "abc12397293"
+  "userId": "abc123973293"
 }
 
 ###
