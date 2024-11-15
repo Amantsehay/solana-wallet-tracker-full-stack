@@ -8,7 +8,7 @@ const prismaWalletRepository = new PrismaWalletRepository();
 const userPlan = new UserPlan();
 const generalMessages = new GeneralMessages();
 
-export const addWalletService = {
+const addWalletsService =  {
   async addWallets(userId: string, walletEntries: string[]): Promise<string[]> {
     const responses: string[] = [];
     const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -59,3 +59,45 @@ export const addWalletService = {
     return responses;
   },
 };
+
+const deleteWalletsService = async (userId: string, walletAddresses: string[]) => {
+  let deletedCount = 0;
+  const failedAddresses: string[] = [];
+  const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
+  for (const walletAddress of walletAddresses) {
+    const isValid = base58Regex.test(walletAddress) && PublicKey.isOnCurve(new PublicKey(walletAddress).toBytes())
+
+    if (!isValid) {
+      failedAddresses.push(walletAddress);
+      continue;
+    }
+
+    const deletedAddress = await prismaWalletRepository.deleteWallet(userId, walletAddress);
+
+    if (!deletedAddress?.walletId) {
+      failedAddresses.push(walletAddress);
+    } else {
+      deletedCount++;
+    }
+  }
+
+  return { deletedCount, failedAddresses };
+};
+
+
+// const myPrivateWalletService = {
+//   async getPrivateKey(userId: string): Promise<string> {
+//     const userWallet = await prismaWalletRepository.getUserWallets(userId);
+
+//     if (!userWallet || userWallet.length === 0) {
+//       return '';
+//     }
+
+//     return userWallet[0].privateKey;
+//   },
+// }
+
+// const showMyP
+
+
+export {deleteWalletsService, addWalletsService}

@@ -54,7 +54,7 @@ export class DeleteCommand {
       const walletAddresses = responseMsg.text
         ?.split('\n')
         .map((addr) => addr.trim())
-        .filter(Boolean) // Split input by new lines, trim, and remove empty lines
+        .filter(Boolean) 
 
       const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
 

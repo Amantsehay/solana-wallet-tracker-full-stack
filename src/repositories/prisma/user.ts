@@ -22,6 +22,7 @@ export class PrismaUserRepository {
         personalWalletPrivKey: privateKey,
       },
     })
+    console.log('New user created:', newUser) 
 
     return newUser
   }

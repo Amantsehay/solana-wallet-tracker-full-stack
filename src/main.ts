@@ -8,6 +8,7 @@ import { DeleteCommand } from './bot/commands/delete-command'
 import { TrackWallets } from './lib/track-wallets'
 import { CronJobs } from './lib/cron-jobs'
 import userRoutes from './routes/userRoutes'
+import walletRoutes from './routes/walletRoutes'
 
 dotenv.config()
 
@@ -38,8 +39,9 @@ class Main {
   }
 
   setupRoutes() {
+    this.app.use('/wallet', walletRoutes)
 
-    this.app.use('/start', userRoutes)
+    this.app.use('/user', userRoutes)
     // Default endpoint
     this.app.get('/', async (req, res) => {
       try {
