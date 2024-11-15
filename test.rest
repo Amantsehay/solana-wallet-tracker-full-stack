@@ -1,0 +1,10 @@
+POST http://localhost:3001/start/start
+Content-Type: application/json
+
+{
+  "chatId": "123456789",
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe",
+  "userId": "abc123"
+}
