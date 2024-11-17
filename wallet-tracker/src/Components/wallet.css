@@ -94,3 +94,65 @@
     right: 0 !important;
     height: 10px !important; /* This creates the gap */
   }
+
+  /* Existing styles remain unchanged */
+
+/* Updated Dropdown Styles */
+.wallet-adapter-dropdown-list {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  list-style-type: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: 300px !important; /* Set a fixed max-height */
+  overflow-y: auto !important; /* Allow scrolling if content exceeds max-height */
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+  opacity: 0 !important;
+  transform: translateY(-10px) !important;
+  pointer-events: none !important;
+  z-index: 1000 !important;
+}
+
+.wallet-adapter-dropdown-list-active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+/* Remove hover styles as they interfere with click behavior */
+.wallet-adapter-dropdown:hover .wallet-adapter-dropdown-list,
+.wallet-adapter-dropdown:focus-within .wallet-adapter-dropdown-list {
+  /* Remove these styles */
+}
+
+/* Animation for dropdown */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.wallet-adapter-dropdown-list-active {
+  animation: slideDown 0.3s ease forwards !important;
+}
+
+/* Add a pseudo-element to create a gap between button and dropdown */
+.wallet-adapter-dropdown::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 10px !important;
+}
