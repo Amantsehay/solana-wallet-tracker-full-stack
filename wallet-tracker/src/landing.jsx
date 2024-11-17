@@ -2,23 +2,31 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Wallet } from 'lucide-react'
+import { Wallet, HomeIcon } from 'lucide-react'
 import { SolanaWalletProvider } from './Components/WalletProvider'
-import {SolanaConnect} from "./Components/SolanaConnect"
+import { SolanaConnect } from "./Components/SolanaConnect"
+import Home from './Components/home'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 export default function Component() {
-  const [isConnecting, setIsConnecting] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [showHome, setShowHome] = useState(false)
+  const wallet = useWallet()
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
 
-  const handleConnect = () => {
-    setIsConnecting(true)
-    setTimeout(() => setIsConnecting(false), 2000)
+  const handleGoToHome = () => {
+    setShowHome(true)
   }
 
+  if (showHome) {
+    return <Home />
+  }
+  wallet.connect().then(() => console.log("Connected!"));
+
+  console.log(wallet)
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden relative">
       {/* Smoky background animation */}
@@ -28,25 +36,23 @@ export default function Component() {
           <motion.div
             key={i}
             className="absolute w-64 h-64 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full opacity-5 blur-1xl"
-            initial={{ 
-              x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight, 
-              scale: 0 
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              scale: 0
             }}
             animate={{
               x: Math.random() * window.innerWidth,
               y: Math.random() * window.innerHeight,
               scale: Math.random() * 1.5 + 0.5,
             }}
-            transition={{ 
-              duration: Math.random() * 10 + 10, 
-              repeat: Infinity, 
-              repeatType: 'reverse' 
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              repeatType: 'reverse'
             }}
           />
         ))}
-
-
       </div>
 
       {/* Hero Text */}
@@ -60,16 +66,34 @@ export default function Component() {
           Welcome to Amana <br />Wallet Tracker App
         </span>
       </motion.h1>
-      <div>
-      <SolanaWalletProvider>
-      <SolanaConnect />
-    </SolanaWalletProvider> 
+
+      {/* Wallet Connect */}
+      <div className="relative z-10">
+        <SolanaWalletProvider wallet= {wallet}>
+          <SolanaConnect />
+          
+
+        </SolanaWalletProvider>
       </div>
-      
 
-      
+      {/* Show "Go to Home" button if wallet is connected */}
+       (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6 relative z-10"
+        >
+          <button
+            onClick={handleGoToHome}
+            className="flex items-center space-x-2 bg-purple-500 text-white px-4 py-2 rounded shadow hover:bg-purple-600"
+          >
+            <HomeIcon className="w-4 h-4" />
+            <span>Go to Home</span>
+          </button>
+        </motion.div>
+      )
 
-    
       <AnimatePresence>
         {!isLoaded && (
           <motion.div
