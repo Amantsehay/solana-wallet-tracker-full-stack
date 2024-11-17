@@ -7,7 +7,7 @@ import { SolanaWalletProvider } from './Components/WalletProvider'
 import { SolanaConnect } from "./Components/SolanaConnect"
 import Home from './Components/home'
 import { useWallet } from '@solana/wallet-adapter-react'
-
+import { Link } from 'react-router-dom'
 export default function Component() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [showHome, setShowHome] = useState(false)
@@ -17,13 +17,9 @@ export default function Component() {
     setIsLoaded(true)
   }, [])
 
-  const handleGoToHome = () => {
-    setShowHome(true)
-  }
+ 
 
-  if (showHome) {
-    return <Home />
-  }
+ 
   wallet.connect().then(() => console.log("Connected!"));
 
   console.log(wallet)
@@ -84,13 +80,15 @@ export default function Component() {
           transition={{ delay: 0.5 }}
           className="mt-6 relative z-10"
         >
+          <Link to={"/home"}>
           <button
-            onClick={handleGoToHome}
+          label="Go to Home"
             className="flex items-center space-x-2 bg-purple-500 text-white px-4 py-2 rounded shadow hover:bg-purple-600"
           >
             <HomeIcon className="w-4 h-4" />
             <span>Go to Home</span>
           </button>
+          </Link>
         </motion.div>
       )
 

@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Check } from 'lucide-react'
+import { Plus, Check, Trash2, ArrowRight } from 'lucide-react'
 import React from 'react'
+import CryptoDashboard from './FetchBinance'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('toFollow')
@@ -13,6 +15,10 @@ export default function Home() {
   ])
   const [followedWallets, setFollowedWallets] = useState<{ address: string, name: string }[]>([])
   const [newWalletAddress, setNewWalletAddress] = useState('')
+  const [newWalletName, setNewWalletName] = useState('')
+  const [selectedWallet, setSelectedWallet] = useState<{ address: string, name: string } | null>(null)
+
+//   const router = router()
 
   const handleFollow = (wallet) => {
     setFollowedWallets([...followedWallets, wallet])
@@ -21,9 +27,27 @@ export default function Home() {
 
   const handleAddWallet = () => {
     if (newWalletAddress) {
-      setWalletsToFollow([...walletsToFollow, { address: newWalletAddress, name: `Wallet ${walletsToFollow.length + 1}` }])
+      setWalletsToFollow([...walletsToFollow, { 
+        address: newWalletAddress,
+        name: newWalletName ? newWalletName : `Wallet ${walletsToFollow.length + 1}`
+      }])
       setNewWalletAddress('')
+      setNewWalletName('')
     }
+  }
+
+  const handleDelete = (wallet) => {
+    setFollowedWallets(followedWallets.filter(w => w.address !== wallet.address))
+    setWalletsToFollow([...walletsToFollow, wallet])
+  }
+
+  const handleWalletClick = (wallet) => {
+    setSelectedWallet(wallet)
+  }
+
+  if (selectedWallet) {
+    return <CryptoDashboard />
+    // return <CryptoDashboard wallet={selectedWallet} onBack={() => setSelectedWallet(null)} />
   }
 
   return (
@@ -59,6 +83,13 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-white mb-4">Wallets to Follow</h2>
               <p className="text-gray-400 mb-4">Add new wallets or follow existing ones.</p>
               <div className="flex space-x-2 mb-4">
+                 <input
+                  type="text"
+                  placeholder="Enter wallet name"
+                  value={newWalletName}
+                  onChange={(e) => setNewWalletName(e.target.value)}
+                  className="flex-1 px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
                 <input
                   type="text"
                   placeholder="Enter wallet address"
@@ -66,6 +97,7 @@ export default function Home() {
                   onChange={(e) => setNewWalletAddress(e.target.value)}
                   className="flex-1 px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
+                
                 <button
                   onClick={handleAddWallet}
                   className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
@@ -108,8 +140,21 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <span className="text-white">{wallet.name} ({wallet.address})</span>
-                    <Check className="text-green-500 w-5 h-5" />
+                    <Link to= {"/chart"}>
+                    <span className="text-white cursor-pointer flex items-center" onClick={() => handleWalletClick(wallet)}>
+                      {wallet.name} ({wallet.address})
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </span>
+                    </Link>
+                    <div className="flex items-center">
+                      <Check className="text-green-500 w-5 h-5 mr-2" />
+                      <button
+                        onClick={() => handleDelete(wallet)}
+                        className="text-red-500 hover:text-red-600 focus:outline-none"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </motion.li>
                 ))}
               </ul>

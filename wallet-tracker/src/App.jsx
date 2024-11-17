@@ -4,14 +4,19 @@ import viteLogo from '/vite.svg'
 // import './App.css'
 import Landing from './landing.jsx'
 import Home from './Components/home.tsx'
-
+import {BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import CryptoDashboard from './Components/FetchBinance.jsx'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-    <Landing />
-    </>
+    <Router>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/chart" element={<CryptoDashboard />} />
+    </Routes>
+  </Router>
   )
 }
 
